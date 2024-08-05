@@ -31,14 +31,53 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
+                        <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" name="password">
+                                <div class="toggle-password">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </div>
                                 <div id="warning-message" style="color: red; display: none;">
                                     Password minimal 8 karakter dan 1 huruf kapital
                                 </div>
                             </div>
                         </div>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                        <style>
+                            .form-group {
+                                position: relative;
+                            }
+
+                            .toggle-password {
+                                position: absolute;
+                                top: 70%;
+                                right: 10px;
+
+                                transform: translateY(-50%);
+                                cursor: pointer;
+                            }
+
+                            #warning-message {
+                                color: red;
+                                display: none;
+                            }
+                        </style>
+                         <script>
+                            document.querySelector('.toggle-password').addEventListener('click', function () {
+                                const passwordInput = document.getElementById('password');
+                                const icon = this.querySelector('i');
+                                
+                                if (passwordInput.type === 'password') {
+                                    passwordInput.type = 'text';
+                                    icon.classList.remove('fa-eye');
+                                    icon.classList.add('fa-eye-slash');
+                                } else {
+                                    passwordInput.type = 'password';
+                                    icon.classList.remove('fa-eye-slash');
+                                    icon.classList.add('fa-eye');
+                                }
+                            });
+                        </script>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Level">Level</label>

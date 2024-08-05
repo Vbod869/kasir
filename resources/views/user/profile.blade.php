@@ -73,12 +73,48 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="password">Password Baru</label>
-                                            <input type="password" name="password" class="form-control"
-                                                placeholder="Opsional">
+                                    <div class="form-group">
+                                        <label for="password">Password Baru</label>
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Opsional">
+                                        <div class="toggle-password">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
                                         </div>
                                     </div>
+                                    </div>
+                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                                    <style>
+                                        .form-group {
+                                            position: relative;
+                                        }
+
+                                        .form-control {
+                                            padding-right: 40px; /* Make room for the eye icon */
+                                        }
+
+                                        .toggle-password {
+                                            position: absolute;
+                                            top: 70%;
+                                            right: 10px;
+                                            transform: translateY(-50%);
+                                            cursor: pointer;
+                                        }
+                                    </style>
+                                    <script>
+                                        document.querySelector('.toggle-password').addEventListener('click', function () {
+                                            const passwordInput = document.getElementById('password');
+                                            const icon = this.querySelector('i');
+                                            
+                                            if (passwordInput.type === 'password') {
+                                                passwordInput.type = 'text';
+                                                icon.classList.remove('fa-eye');
+                                                icon.classList.add('fa-eye-slash');
+                                            } else {
+                                                passwordInput.type = 'password';
+                                                icon.classList.remove('fa-eye-slash');
+                                                icon.classList.add('fa-eye');
+                                            }
+                                        });
+                                    </script>
                                     <div class="col-md-12" hidden>
                                         <div class="form-group">
                                             <label for="foto">Foto</label>

@@ -18,6 +18,14 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/components.css')}}">
+    <style>
+        body {
+            background-image: url('{{asset('assets/img/unsplash/back3.jpg')}}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
 </head>
 <body class="bg-white">
     <div id="app">

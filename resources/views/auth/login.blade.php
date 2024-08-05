@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{asset('assets/modules/bootstrap-social/bootstrap-social.css')}}">
     <link rel="stylesheet" href="{{asset('assets/modules/izitoast/css/iziToast.min.css')}}">
 
+    <!-- Template JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/components.css')}}">
@@ -66,8 +70,49 @@
                                                     Lupa Password?
                                                 </a>
                                             </div>
-                                            <input id="password" type="password" class="form-control" name="password"
-                                                tabindex="2" placeholder="Masukan Password">
+                                            <div class="password-container">
+                                                <input id="password" type="password" class="form-control" name="password" tabindex="2" placeholder="Masukan Password">
+                                                <span class="toggle-password">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                            <style>
+                                                .password-container {
+                                                position: relative;
+                                                display: flex;
+                                                align-items: center;
+                                            }
+
+                                            .toggle-password {
+                                                position: absolute;
+                                                right: 10px;
+                                                cursor: pointer;
+                                            }
+
+                                            .form-control {
+                                                width: 100%;
+                                                padding-right: 30px; /* Adjust padding to make room for the icon */
+                                            }
+
+                                            </style>
+
+                                            <script>
+                                            document.querySelector('.toggle-password').addEventListener('click', function () {
+                                            const passwordInput = document.getElementById('password');
+                                            const icon = this.querySelector('i');
+                                            
+                                            if (passwordInput.type === 'password') {
+                                                passwordInput.type = 'text';
+                                                icon.classList.remove('fa-eye');
+                                                icon.classList.add('fa-eye-slash');
+                                            } else {
+                                                passwordInput.type = 'password';
+                                                icon.classList.remove('fa-eye-slash');
+                                                icon.classList.add('fa-eye');
+                                            }
+                                        });
+                                        </script>
+
                                             <div class="invalid-feedback">
                                                 please fill in your password
                                             </div>
@@ -134,6 +179,14 @@
         });
     </script>
     @endif
+    <script>
+        // Welcome notification
+        iziToast.info({
+            title: 'Hallo!',
+            message: 'Selamat datang di V-Cashier by Vbod',
+            position: 'topRight'
+        });
+    </script>
 </body>
 
 </html>

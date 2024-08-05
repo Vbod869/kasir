@@ -32,7 +32,8 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-
+//profile
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
 
 // bagian lupa pas
