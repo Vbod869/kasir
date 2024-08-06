@@ -1,66 +1,184 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<!DOCTYPE html>
+<html lang="en">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Login V-Cashier</title>
+    <link rel="icon" href="{{asset('assets/img/unsplash/logo.png')}}" type="image/x-icon">
 
-## About Laravel
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="{{asset('assets/modules/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/modules/fontawesome/css/all.min.css')}}">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="{{asset('assets/modules/bootstrap-social/bootstrap-social.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/modules/izitoast/css/iziToast.min.css')}}">
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+    <!-- Template JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/components.css')}}">
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    <style>
+        body {
+            background-image: url('{{asset('assets/img/unsplash/back3.jpg')}}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+</head>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<body class="bg-white">
+    <div id="app">
+        <section class="section">
+            <div class="container mt-5">
+                <div class="row">
+                    <div
+                        class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+                        <div class="login-brand">
+                            <!-- <img src="stisla/img/stisla-fill.svg" alt="logo" width="100"
+                                class="shadow-light rounded-circle"> -->
+                        </div>
 
-## Laravel Sponsors
+                        <div class="card card-info shadow">
+                            <div class="card-header">
+                                <h4 class="text-info">V-Cashier</h4>
+                            </div>
+                            <div class="card-body">
+                                <form method="POST" action="/postlogin" class="needs-validation">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label class="text-info" for="email">Email</label>
+                                        <input id="email" type="email" class="form-control" name="email" tabindex="1"
+                                            autofocus placeholder="Masukkan Email">
+                                        <div class="invalid-feedback">
+                                            Please fill in your email
+                                        </div>
+                                    </div>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+                                    <div class="form-group">
+                                        <div class="d-block">
+                                            <label for="password" class="control-label text-info">Password</label>
+                                            <div class="float-right d-none">
+                                                <a href="/forgot-password" class="text-small text-info">
+                                                    Lupa Password?
+                                                </a>
+                                            </div>
+                                            <div class="password-container">
+                                                <input id="password" type="password" class="form-control" name="password" tabindex="2" placeholder="Masukan Password">
+                                                <span class="toggle-password">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                            <style>
+                                                .password-container {
+                                                position: relative;
+                                                display: flex;
+                                                align-items: center;
+                                            }
 
-### Premium Partners
+                                            .toggle-password {
+                                                position: absolute;
+                                                right: 10px;
+                                                cursor: pointer;
+                                            }
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+                                            .form-control {
+                                                width: 100%;
+                                                padding-right: 30px; /* Adjust padding to make room for the icon */
+                                            }
 
-## Contributing
+                                            </style>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+                                            <script>
+                                            document.querySelector('.toggle-password').addEventListener('click', function () {
+                                            const passwordInput = document.getElementById('password');
+                                            const icon = this.querySelector('i');
+                                            
+                                            if (passwordInput.type === 'password') {
+                                                passwordInput.type = 'text';
+                                                icon.classList.remove('fa-eye');
+                                                icon.classList.add('fa-eye-slash');
+                                            } else {
+                                                passwordInput.type = 'password';
+                                                icon.classList.remove('fa-eye-slash');
+                                                icon.classList.add('fa-eye');
+                                            }
+                                        });
+                                        </script>
 
-## Code of Conduct
+                                            <div class="invalid-feedback">
+                                                please fill in your password
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <span>Belum punya akun? </span>
+                                        <a href="/daftar" class="text-info">
+                                            Daftar
+                                        </a>
+                                    </div>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-info btn-lg btn-block" tabindex="4">
+                                            Login
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </div>
 
-## Security Vulnerabilities
+    <!-- General JS Scripts -->
+    <script src="{{asset('assets/modules/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/modules/popper.js')}}"></script>
+    <script src="{{asset('assets/modules/tooltip.js')}}"></script>
+    <script src="{{asset('assets/modules/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets/modules/nicescroll/jquery.nicescroll.min.js')}}"></script>
+    <script src="{{asset('assets/modules/moment.min.js')}}"></script>
+    <script src="{{asset('assets/js/stisla.js')}}"></script>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    <!-- JS Libraies -->
+    <script src="{{asset('assets/modules/izitoast/js/iziToast.min.js')}}"></script>
+    <!-- Page Specific JS File -->
 
-## License
+    <!-- Template JS File -->
+    <script src="{{asset('assets/js/scripts.js')}}"></script>
+    <script src="{{asset('assets/js/custom.js')}}"></script>
+    @if(session('status'))
+    <script>
+        iziToast.success({
+            title: 'Password Reset!',
+            message: '{{session('status')}}',
+            position: 'topRight'
+        });
+    </script>
+    @elseif(session('gagal'))
+    <script>
+        iziToast.error({
+            title: 'Gagal Login!',
+            message: '{{session('gagal')}}',
+            position: 'topRight'
+        });
+    </script>
+    @elseif(session('sukses'))
+    <script>
+        iziToast.success({
+            title: 'Sukses!',
+            message: '{{session('sukses')}}',
+            position: 'topRight'
+        });
+    </script>
+    @endif
+</body>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+</html>
