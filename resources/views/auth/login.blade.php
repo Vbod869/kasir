@@ -179,14 +179,6 @@
         });
     </script>
     @endif
-    <script>
-        // Welcome notification
-        iziToast.info({
-            title: 'Hallo!',
-            message: 'Selamat datang di V-Cashier by Vbod',
-            position: 'topRight'
-        });
-    </script>
 </body>
 
 </html>
