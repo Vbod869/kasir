@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/modules/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="assets/modules/bootstrap-social/bootstrap-social.css">
     <link rel="stylesheet" href="assets/modules/izitoast/css/iziToast.min.css">
+    <link rel="icon" href="{{asset('assets/img/unsplash/logo.png')}}" type="image/x-icon">
     
 
     <link rel="stylesheet" href="assets/css/style.css">
