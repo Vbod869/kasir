@@ -84,6 +84,7 @@
                                 <select class="custom-select" name="level">
                                     <option value="">Pilih Level...</option>
                                     <option value="admin">Admin</option>
+                                    <option value="kasir">Petugas</option>
                                 </select>
                             </div>
                         </div>

@@ -37,6 +37,33 @@
                         </form>
                     </div>
                     @endif
+
+                    @if(auth()->user()->level == 'kasir')
+                    <div class="card-header bg-white justify-content-center">
+                        <form action="/{{auth()->user()->level}}/laporan/cari">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex">
+                                        <label class="mr-1" for="nama">Dari</label>
+                                        <input type="date" class="form-control" name="dari" id="tanggalDari" max="<?php echo date('Y-m-d'); ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex">
+                                        <label class="mr-1" for="nama">Sampai</label>
+                                        <input type="date" class="form-control mr-5" name="sampai" id="tanggalSampai" max="<?php echo date('Y-m-d'); ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-search"></i> Cari</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    @endif
+
                     @if(auth()->user()->level == 'kasir')
                     <div class="card-header bg-white">
                         <h4 class="text-primary">Riwayat Transaksi</h4>

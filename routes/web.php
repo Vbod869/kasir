@@ -16,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,5 +162,19 @@ Route::group(['middleware' => ['auth', 'ceklevel:admin,kasir']], function(){
     Route::put('/kasir/transaksi-sementara/{id}/{barang_id}/edit', [TransaksiSementaraController::class, 'update']);
     Route::get('/kasir/profile/{id}', [ProfileController::class, 'edit']);
     Route::put('/kasir/profile/{id}', [ProfileController::class, 'update']);
+
+    Route::get('/kasir/laporan', [TransaksiController::class, 'index']);
+    Route::get('/kasir/laporan/cari', [TransaksiController::class, 'cari']);
+
+    
+    Route::get('/kasir/laporan/{dari}/{sampai}/print', [TransaksiController::class, 'printTanggal']);
+    Route::get('/kasir/laporan/{kodeTransaksi}/print', [TransaksiController::class, 'print']);
+    Route::get('/kasir/laporan/{kodeTransaksi}', [TransaksiController::class, 'show']);
     
 });
+
+
+Route::post('/{level}/penjualan/bayar/{nomor}', [PaymentController::class, 'bayar'])->name('payment.process');
+Route::get('/payment/success', function () {
+    return view('payment.success'); // Replace with your success view
+})->name('payment.success');

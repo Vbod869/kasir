@@ -36,6 +36,11 @@
                 <a href="/{{auth()->user()->level}}/user" class="nav-link"><i class="fas fa-users"></i><span>User</span></a>
             </li>
             @endif
+            @if(auth()->user()->level == 'kasir')
+            <li class="dropdown">
+                <a href="/{{auth()->user()->level}}/laporan" class="nav-link"><i class="fas fa-file"></i><span>Laporan</span></a>
+            </li>
+            @endif
         </ul>
     </aside>
 </div>
