@@ -12,6 +12,53 @@
         <p>Hallo <span class="font-weight-bold">{{auth()->user()->nama}}</span>, Kamu Login Sebagai <span class="font-weight-bold">{{auth()->user()->level}}</span>.</p>
     </div>
 
+    @if(auth()->user()->level == 'kasir')
+    <div class="section-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-white">
+                        <h4 class="text-info">Barang Barang Diskon</h4>
+                    </div>
+                    <div class="card-body p-2">
+                        <table class="table table-hover" id="table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Nama</th>
+                                    <th>Harga Awal</th>
+                                    <th>Diskon</th>
+                                    <th>Harga Sesudah Diskon</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($barang as $item)
+                                <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$item->nama}}<input class="form-control" type="text"
+                                    value="{{$item->id}}" name="barang_id" hidden></td>
+                                    <td>{{$item->formatRupiah('harga_jual')}}<input class="form-control"
+                                                    type="text" value="{{$item->harga_jual}}" name="harga" hidden></td>
+                                    <td>{{$item->diskon}}%</td>
+                                    <td>
+                                        {{-- Harga Setelah Diskon --}}
+                                        {{ number_format($item->harga_jual - ($item->harga_jual * $item->diskon / 100), 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+</section>
+@include('dashboard.kosong')
+
+
     @if(auth()->user()->level=='admin')
     <div class="section-body">
         <div class="row">
@@ -150,5 +197,10 @@
     if (stockCount > 0) {
         setInterval(changeBackgroundColor, 300); // Call the function every second
     }
+
+    $(document).ready(function () {
+    $('#table-diskon').DataTable();
+});
+
 </script>
 @endpush

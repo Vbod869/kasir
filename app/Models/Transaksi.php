@@ -18,10 +18,18 @@ class Transaksi extends Model
         'bayar',
         'kembali',
         'kode_kasir',
+        'diskon_voucher',
+        'kode_voucher',
+        'voucher_id', // Tambahkan voucher ID
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
     }
 }

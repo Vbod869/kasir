@@ -17,6 +17,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,7 +149,42 @@ Route::group(['middleware' => ['auth', 'ceklevel:admin']], function(){
     Route::get('/admin/user/{id}', [UserController::class, 'destroy']);
     Route::get('/admin/profile/{id}', [ProfileController::class, 'edit']);
     Route::put('/admin/profile/{id}', [ProfileController::class, 'update']);
+
+  
+
+   
+
+
+    
+    
 });
+
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/voucher', [VoucherController::class, 'index'])->name('voucher.index');
+    Route::post('/voucher', [VoucherController::class, 'store'])->name('voucher.store'); // Tambahkan ini
+    Route::get('/voucher/{id}/edit', [VoucherController::class, 'edit'])->name('voucher.edit');
+    Route::put('/voucher/{id}', [VoucherController::class, 'update'])->name('voucher.update');
+    
+    Route::delete('/voucher/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy');
+   
+
+    Route::resource('voucher', VoucherController::class);
+
+    Route::get('/cek-voucher', [VoucherController::class, 'cekVoucher'])->name('voucher.cek');
+
+    Route::get('/cek-voucher', 'VoucherController@cekVoucher')->name('voucher.cek');
+
+    Route::post('/voucher/apply', [VoucherController::class, 'applyVoucher'])->name('voucher.apply');
+
+    Route::post('/member/apply', [MemberController::class, 'applyPoin'])->name('member.apply');
+
+    
+
+
+});
+
 
 Route::group(['middleware' => ['auth', 'ceklevel:admin,kasir']], function(){
     Route::get('/kasir/dashboard', [DashboardController::class, 'index']);
@@ -170,6 +207,15 @@ Route::group(['middleware' => ['auth', 'ceklevel:admin,kasir']], function(){
     Route::get('/kasir/laporan/{dari}/{sampai}/print', [TransaksiController::class, 'printTanggal']);
     Route::get('/kasir/laporan/{kodeTransaksi}/print', [TransaksiController::class, 'print']);
     Route::get('/kasir/laporan/{kodeTransaksi}', [TransaksiController::class, 'show']);
+
+    Route::get('kasir/member', [MemberController::class, 'index'])->name('member.index');
+    Route::get('kasir/member/data', [MemberController::class, 'getData'])->name('member.data');
+    Route::post('kasir/member/status/{id}', [MemberController::class, 'updateStatus'])->name('member.status');
+
+    Route::post('/member/store', [MemberController::class, 'store'])->name('member.store');
+
+
+    
     
 });
 
@@ -178,3 +224,58 @@ Route::post('/{level}/penjualan/bayar/{nomor}', [PaymentController::class, 'baya
 Route::get('/payment/success', function () {
     return view('payment.success'); // Replace with your success view
 })->name('payment.success');
+
+
+
+
+use App\Models\Voucher;
+use Carbon\Carbon;
+
+Route::get('/cek-voucher', function (Request $request) {
+    $kode = $request->query('kode');  
+    $voucher = Voucher::where('kode', $kode)
+                      ->where('status', 'aktif')
+                      ->where('kuota', '>', 1) // Pastikan masih ada kuota
+                      ->whereDate('tanggal_berlaku', '<=', Carbon::today()) // Voucher sudah berlaku
+                      ->whereDate('tanggal_expired', '>=', Carbon::today()) // Belum kedaluwarsa
+                      ->first();
+
+    if ($voucher) {
+        return response()->json([
+            'valid' => true,
+            'discount' => $voucher->diskon
+        ]);
+    } else {
+        return response()->json([
+            'valid' => false
+        ]);
+    }
+});
+
+Route::post('/pakai-voucher', function (Request $request) {
+    $kode = $request->input('kode');
+    $voucher = Voucher::where('kode', $kode)->where('kuota', '>', 0)->first();
+
+    if ($voucher) {
+        $voucher->kuota -= 1;
+        if ($voucher->kuota == 0) {
+            $voucher->status = 'habis'; // Status jadi habis jika kuota habis
+        }
+        $voucher->save();
+
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+});
+
+
+
+
+
+
+
+
+
+
+
+

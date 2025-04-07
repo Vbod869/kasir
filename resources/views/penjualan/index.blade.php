@@ -246,5 +246,37 @@
         document.getElementById('bayar').value = hasil;
         hitungKembali();
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Event listener untuk perubahan jumlah atau diskon
+    document.querySelectorAll('.jumlah input, .diskon input').forEach(function (input) {
+        input.addEventListener('input', updateTotal);
+    });
+
+    function updateTotal() {
+        var rows = document.querySelectorAll('#table-transaksi tbody tr');
+        var grandTotal = 0;
+
+        rows.forEach(function (row) {
+            var harga = parseFloat(row.querySelector('.harga input').value) || 0;
+            var jumlah = parseFloat(row.querySelector('.jumlah input').value) || 0;
+            var diskon = parseFloat(row.querySelector('.diskon input').value) || 0;
+
+            // Hitung total setelah diskon
+            var total = (harga * jumlah) - ((harga * jumlah) * (diskon / 100));
+
+            // Update total di tampilan
+            row.querySelector('.total').textContent = total.toLocaleString('id-ID');
+            row.querySelector('.total').setAttribute('value', total);
+
+            grandTotal += total;
+        });
+
+        // Perbarui total keseluruhan di halaman
+        document.getElementById('label-total').textContent = grandTotal.toLocaleString('id-ID');
+        document.getElementById('total').value = grandTotal;
+    }
+});
+
 </script>
 @endpush

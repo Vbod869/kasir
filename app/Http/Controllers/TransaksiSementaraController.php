@@ -6,10 +6,12 @@ use App\Models\TransaksiSementara;
 use App\Models\TransaksiDetail;
 use App\Models\Transaksi;
 use App\Models\Barang;
+use App\Models\Voucher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TransaksiSementaraController extends Controller
 {
@@ -136,63 +138,68 @@ class TransaksiSementaraController extends Controller
         
         return redirect('/' . $user->level . '/penjualan');
     }
-    
-    public function bayar(Request $request, $kode_transaksi)
+
+public function bayar(Request $request, $kode_transaksi)
+{
+    $user = Auth::user();
+    $transaksi_sementara = TransaksiSementara::all();
+
+    if($transaksi_sementara->isEmpty())
     {
-        $user = Auth::user();
-
-        $transaksi_sementara = TransaksiSementara::all();
-
-        if($transaksi_sementara->isEmpty())
-        {
-            return redirect('/' . $user->level . '/penjualan')->with('gagal', 'Transaksi Gagal');
-        }
-        else
-        {
-            try{
-                $request->validate([
-                    'kode_transaksi' => 'required|string|max:255',
-                    'total' => 'required|numeric',
-                    'bayar' => 'required|numeric',
-                    'kembali' => 'required|numeric',
-                    'kode_kasir' => 'required|string|max:255',
-                ]);
-
-
-                $tanggalSekarang = now('Asia/Jakarta')->format('Y-m-d H:i:s');
-                $transaksi = new Transaksi;
-                $transaksi->kode_transaksi = $request->kode_transaksi;
-                $transaksi->total = $request->total;
-                $transaksi->bayar = $request->bayar;
-                $transaksi->kembali = $request->kembali;
-                $transaksi->kode_kasir = $request->kode_kasir;
-                $transaksi->tanggal = $tanggalSekarang;
-                $transaksi->save();
-
-                foreach ($transaksi_sementara as $data) {
-                    $barang = Barang::find($data->barang_id);
-        
-                        $kurangi = $barang->stok - $data->jumlah;
-        
-                        $barang->update(['stok' => $kurangi]);
-
-                        TransaksiDetail::create([
-                            'kode_transaksi' => $data->kode_transaksi,
-                            'barang' => $barang->nama,
-                            'harga' => $data->harga,
-                            'jumlah' => $data->jumlah,
-                            'diskon' => $data->diskon,
-                            'total' => $data->total,
-                        ]);
-
-                        TransaksiSementara::truncate();
-                }
-            }
-            catch(\Exception $e){
-                return redirect('/' . $user->level . '/penjualan')->with('gagal', 'Transaksi gagal Pesan Kesalahan: ' . $e->getMessage());
-            }
-
-            return redirect('/' . $user->level . '/penjualan')->with('berhasil', $kode_transaksi);
-        }
+        return redirect('/' . $user->level . '/penjualan')->with('gagal', 'Transaksi Gagal');
     }
+    else
+    {
+        try{
+            $request->validate([
+                'kode_transaksi' => 'required|string|max:255',
+                'total' => 'required|numeric',
+                'bayar' => 'required|numeric',
+                'kembali' => 'required|numeric',
+                'kode_kasir' => 'required|string|max:255',
+                'kode_voucher' => 'nullable|string|max:50', // Validate kode_voucher
+            ]);
+
+            $voucherId = null;
+
+            $tanggalSekarang = now('Asia/Jakarta')->format('Y-m-d H:i:s');
+            $transaksi = new Transaksi;
+            $transaksi->kode_transaksi = $request->kode_transaksi;
+            $transaksi->total = $request->total;
+            $transaksi->bayar = $request->bayar;
+            $transaksi->kembali = $request->kembali;
+            $transaksi->kode_kasir = $request->kode_kasir;
+            $transaksi->tanggal = $tanggalSekarang;
+            $transaksi->voucher_id = $voucherId; // Simpan ID voucher jika ada
+            $transaksi->kode_voucher = 123; // Simpan kode voucher
+            $transaksi->save();
+
+            foreach ($transaksi_sementara as $data) {
+                $barang = Barang::find($data->barang_id);
+    
+                $kurangi = $barang->stok - $data->jumlah;
+    
+                $barang->update(['stok' => $kurangi]);
+
+                TransaksiDetail::create([
+                    'kode_transaksi' => $data->kode_transaksi,
+                    'barang' => $barang->nama,
+                    'harga' => $data->harga,
+                    'jumlah' => $data->jumlah,
+                    'diskon' => $data->diskon,
+                    'total' => $data->total,
+                ]);
+            }
+            
+            TransaksiSementara::truncate();
+        }
+        catch(\Exception $e){
+            Log::error('Transaksi gagal: ' . $e->getMessage());
+            return redirect('/' . $user->level . '/penjualan')->with('gagal', 'Transaksi gagal Pesan Kesalahan: ' . $e->getMessage());
+        }
+
+        return redirect('/' . $user->level . '/penjualan')->with('berhasil', $kode_transaksi);
+    }
+
+}
 }

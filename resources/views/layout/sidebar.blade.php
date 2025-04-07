@@ -22,10 +22,8 @@
             <li class="dropdown">
                 <a href="/{{auth()->user()->level}}/barang" class="nav-link"><i class="fas fa-boxes"></i><span>Barang</span></a>
             </li>
-            @endif
-            @if(auth()->user()->level == 'kasir')
             <li class="dropdown">
-                <a href="/{{auth()->user()->level}}/penjualan" class="nav-link"><i class="fas fa-shopping-cart"></i><span>Transaksi</span></a>
+                <a href="/{{auth()->user()->level}}/voucher" class="nav-link"><i class="fas fa-ticket-alt"></i><span>Voucher Diskon</span></a>
             </li>
             @endif
             @if(auth()->user()->level == 'admin')
@@ -38,7 +36,17 @@
             @endif
             @if(auth()->user()->level == 'kasir')
             <li class="dropdown">
+                <a href="/{{auth()->user()->level}}/penjualan" class="nav-link"><i class="fas fa-shopping-cart"></i><span>Transaksi</span></a>
+            </li>
+            @endif
+            @if(auth()->user()->level == 'kasir')
+            <li class="dropdown">
                 <a href="/{{auth()->user()->level}}/laporan" class="nav-link"><i class="fas fa-file"></i><span>Laporan</span></a>
+            </li>
+            @endif
+            @if(auth()->user()->level == 'kasir')
+            <li class="dropdown">
+                <a href="/{{auth()->user()->level}}/member" class="nav-link"><i class="fas fa-user"></i><span>Member</span></a>
             </li>
             @endif
         </ul>

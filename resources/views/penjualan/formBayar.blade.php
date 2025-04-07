@@ -36,6 +36,28 @@
                                     <option value="atm">ATM</option> <!-- Added ATM option -->
                                 </select>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="kode_member" class="form-label">Kode Member</label>
+                                <input type="text" id="kode_member" class="form-control">
+                                <button type="button" class="btn btn-primary mt-2" onclick="cekMember()" id="apply_member">Gunakan Poin</button>
+                            </div>
+                            <p id="member-message" class="text-danger" style="display: none;"></p>
+
+                            <!-- Tampilkan total harga -->
+                            <p>Diskon: <span id="diskon_display">0</span></p>
+
+                             <!-- Kode Voucher -->
+                             <div class="mb-3">
+                                <label for="kode_voucher" class="form-label">Kode Voucher</label>
+                                <input type="text" id="kode_voucher" class="form-control">
+                                <button type="button" class="btn btn-primary mt-2" onclick="cekVoucher()" id="apply_voucher">Gunakan Voucher</button>
+                            </div>
+                            <input id="kode_voucher_store" name="kode_voucher_store" value="" type="hidden">
+                            <p id="voucher-message" class="text-danger" style="display: none;"></p>
+
+                            <!-- Tampilkan total harga -->
+                            <p>Diskon: <span id="diskon_display"></span></p>
                             <div class="row">
                                 <div class="col-md-12">
                                     <!-- Pembayaran Tunai -->
@@ -104,6 +126,7 @@
 <!-- qrcode.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+
     // Fungsi untuk mengatur pilihan pembayaran
     function togglePaymentOptions() {
         var paymentMethod = document.getElementById("payment-method").value;
@@ -169,4 +192,127 @@
         var totalBayar = parseInt(document.getElementById("total-bayar").value);
         document.getElementById("kembali").value = amount - totalBayar;
     }
+
+   
+
+    function cekVoucher() {
+    let kode = document.getElementById("kode_voucher").value;
+    let total = parseFloat(document.getElementById("total-bayar").value);
+    let message = document.getElementById("voucher-message");
+
+    if (!kode) {
+        message.textContent = "Masukkan kode voucher!";
+        message.style.display = "block";
+        return;
+    }
+
+    fetch("{{ route('voucher.apply') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ kode: kode, total: total })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.total_setelah_diskon !== undefined) {
+            // Store the voucher code instead of the ID
+            document.getElementById("kode_voucher_store").value = kode;
+            
+            document.getElementById("diskon_display").textContent = data.diskon;
+            document.getElementById("total-bayar").value = data.total_setelah_diskon;
+            document.getElementById("label-total-bayar").textContent = " " + data.total_setelah_diskon.toLocaleString();
+            
+            // Update total on main page
+            document.getElementById("total").value = data.total_setelah_diskon;
+            document.getElementById("label-total").textContent = " " + data.total_setelah_diskon.toLocaleString();
+
+            message.textContent = "Voucher berhasil digunakan!";
+            message.style.color = "green";
+        } else {
+            message.textContent = data.message;
+            message.style.color = "red";
+        }
+        message.style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        message.textContent = "Terjadi kesalahan, coba lagi!";
+        message.style.color = "red";
+        message.style.display = "block";
+    });
+}
+
+
+    function cekMember() {
+    let kode = document.getElementById("kode_member").value;
+    let total = parseFloat(document.getElementById("total-bayar").value);
+    let message = document.getElementById("member-message");
+
+    if (!kode) {
+        message.textContent = "Masukkan kode member!";
+        message.style.display = "block";
+        return;
+    }
+
+    fetch("{{ route('member.apply') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ kode: kode, total: total })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.total_setelah_diskon !== undefined) {
+            document.getElementById("diskon_display").textContent = data.diskon;
+            document.getElementById("total-bayar").value = data.total_setelah_diskon;
+            document.getElementById("label-total-bayar").textContent = " " + data.total_setelah_diskon.toLocaleString();
+
+            // **Tambahan**: Update total di halaman utama juga
+            document.getElementById("total").value = data.total_setelah_diskon;
+            document.getElementById("label-total").textContent = " " + data.total_setelah_diskon.toLocaleString();
+
+            message.textContent = "Poin berhasil digunakan!";
+            message.style.color = "green";
+        } else {
+            message.textContent = data.message;
+            message.style.color = "red";
+        }
+        message.style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        message.textContent = "Terjadi kesalahan, coba lagi!";
+        message.style.color = "red";
+        message.style.display = "block";
+    });
+}
+
+$('#apply_member').click(function() {
+    let kode = $('#kode_member').val();
+    let total = parseFloat(document.getElementById("total-bayar").value);
+
+    $.ajax({
+        url: "{{ route('member.apply') }}",
+        type: "POST",
+        data: {
+            kode: kode,
+            total: total,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            $('#member_message').text(response.message).css('color', 'green');
+            $('#total_discounted').text(response.total_setelah_diskon);
+        },
+        error: function(xhr) {
+            let errorMsg = xhr.responseJSON.message;
+            $('#member_message').text(errorMsg).css('color', 'red');
+        }
+    });
+});
+
+
 </script>
